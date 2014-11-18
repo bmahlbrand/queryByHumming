@@ -4,6 +4,7 @@ import javax.sound.midi.*;
 public class Parser {
     public static final int NOTE_ON = 0x90;
     public static final int NOTE_OFF = 0x80;
+
     public static void main(String[] args) throws Exception {
         final File folder = new File("music");
         buildDatabase(folder);

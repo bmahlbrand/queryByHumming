@@ -2,9 +2,9 @@ class ResultNode {
 	private	String fileName = null;
 	private int distance = 0;
 
-	public ResultNode(String fileName, int distance) {
-		this.fileName = fileName;
+	public ResultNode(int distance, String fileName) {
 		this.distance = distance;
+		this.fileName = fileName;
 	}
 
 	public String getFileName() {
