@@ -30,29 +30,29 @@ public class EditDistance {
 	}
 	
 	public static int damerauLevenshtein(String str1, String str2) {
-		int [][] d = new int[str1.length() + 1][str2.length() + 1];
-		int i, j, cost;
+		int [][] d = new int[str1.length()][str2.length()];
+		int cost;
 	 
-		for (i = 0; i < str1.length(); i++)
+		for (int i = 0; i < str1.length(); i++)
 			d[i][0] = i;
-		for (j = 0; j < str2.length(); j++)
+		for (int j = 0; j < str2.length(); j++)
 			d[0][j] = j;
 
-		for (i = 0; i < str1.length(); i++) {
-			for (j = 0; j < str2.length(); j++) {
+		for (int i = 1; i < str1.length(); i++) {
+			for (int j = 1; j < str2.length(); j++) {
 				if (str1.charAt(i) == str2.charAt(j)) 
 					cost = 0;
 				else 
 					cost = 1;
 				
-				if (i > 1 && j > 1)
+				// if (i > 1 && j > 1)
 				d[i][j] = Math.min(Math.min(
 							d[i-1][j] + 1,     // deletion
 							d[i][j-1] + 1),     // insertion
 							d[i-1][j-1] + cost   // substitution
 							);
 
-				if(i > 0 && j > 0 && str1.charAt(i) == str2.charAt(j-1) && str1.charAt(i-1) == str2.charAt(j)) {
+				if(i > 1 && j > 1 && str1.charAt(i) == str2.charAt(j-1) && str1.charAt(i-1) == str2.charAt(j)) {
 					d[i][j] = Math.min(d[i][j],
 									 d[i-2][j-2] + cost   // transposition
 									 );
@@ -65,9 +65,7 @@ public class EditDistance {
 
 	public static int lcsLength(String a, String b) {
 		int[][] lengths = new int[a.length()+1][b.length()+1];
-	 
-		// row 0 and column 0 are initialized to 0 already
-	 
+	 	 
 		for (int i = 0; i < a.length(); i++)
 			for (int j = 0; j < b.length(); j++)
 				if (a.charAt(i) == b.charAt(j))
@@ -125,6 +123,43 @@ public class EditDistance {
 		}
  
 		return sb.reverse().toString();
+	}
+
+	public int wuManber(String query, String song, int k) {
+		int matchBit = 1;
+
+		for (int i = 1; i < query.length(); i++) {
+			matchBit <<= 1;
+		}
+
+		char presentChars[] = new char[query.length()];
+		int oldState[] = new int[k];
+		oldState[0] = 0;
+		int state[] = new int[k];
+		for (int i = 1; i < k; i++) {
+			oldState[i] = (oldState[i - 1] << 1) | 1; 
+		}
+
+		for (int i = 0; i < song.length(); i++) {
+			state[0] = ((oldState[0] << 1) | 1) & presentChars[i];
+
+			for (int j = 1; j < k; j++) {
+				state[j] = ((oldState[j-1])) & presentChars[i] | 
+				((oldState[j - 1] << 1) | 1 ) | 
+				((state[j - 1] << 1) | 1) | 
+				oldState[j - 1];
+			}
+
+			for (int j = 0; j < k; j++) {
+				oldState[j] = state[j];
+			}
+
+			if ((matchBit & state[k]) != 0) {
+				System.out.printf("a match found ending at %d", i);
+				return i;
+			}
+		}
+		return 0;
 	}
 
 	public static void main(String[] args) throws Exception {

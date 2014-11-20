@@ -34,9 +34,9 @@ public class Parser {
     
     public static String parsonCode(String filename) throws Exception {
         File music_file = new File(filename);
-        int previous_key=0;
+        int previous_key = 0;
         int trackNumber = 0;
-        int firstnote =0;
+        int firstnote = 0;
         StringBuilder ret = new StringBuilder();
         Sequence sequence = MidiSystem.getSequence(music_file);
         for (Track track :  sequence.getTracks()) {
@@ -47,20 +47,20 @@ public class Parser {
                 if (message instanceof ShortMessage) {
                     ShortMessage sm = (ShortMessage) message;
                     if (sm.getCommand() == NOTE_ON) {
-                         if(firstnote==0){
+                         if(firstnote == 0) {
                              ret.append("*");
-                             firstnote=1;
+                             firstnote = 1;
                              int key = sm.getData1();
                              previous_key=key;
-                         }else{
+                         } else {
                              int key = sm.getData1();
-                             if(key==previous_key)
+                             if(key == previous_key)
                                  ret.append("R");
                              else if(key>previous_key)
                                  ret.append("U");
                              else
                                  ret.append("D");
-                             previous_key=key;
+                             previous_key = key;
                          }
                     } 
                 }
